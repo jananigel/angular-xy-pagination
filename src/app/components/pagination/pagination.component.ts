@@ -19,47 +19,34 @@ export class PaginationComponent implements OnInit {
 
   ngOnInit() {
     this.initPages();
-    this.appearPageHandler(0, this.pageCount);
-    // this.appearPageHandler();
+    this.appearPageHandler();
+    this.appearPages = Array.from(this.pages).slice(0, this.pageCount);
   }
 
   onFirstPageClick() {
-
+    this.currentPage = 1;
+    this.appearPageHandler();
   }
 
   onPrevClick() {
-    const appearPageLength = this.appearPages.length - 1;
-    const firstAppearPage = this.appearPages[0];
     this.currentPage -= 1;
-    if (this.currentPage <= firstAppearPage) {
-      const pre = this.currentPage - this.pageCount <= 0 ? 0 : this.currentPage - this.pageCount;
-      this.appearPageHandler(pre, pre + this.pageCount);
-      // this.appearPageHandler(firstAppearPage);
-    }
+    this.appearPageHandler();
   }
 
   onPageClick(index: number) {
-    const appearPageLength = this.appearPages.length - 1;
-    const lastAppearPage = this.appearPages[appearPageLength - 1];
     this.currentPage = index;
-    if (this.currentPage >= lastAppearPage) {
-      // this.appearPageHandler();
-    }
+    this.appearPageHandler();
   }
 
   onNextClick() {
-    const appearPageLength = this.appearPages.length - 1;
-    const lastAppearPage = this.appearPages[appearPageLength - 1];
     this.currentPage += 1;
-    if (this.currentPage >= lastAppearPage) {
-      const next = this.pageCount + this.currentPage - 1 >= appearPageLength ? appearPageLength : this.pageCount + this.currentPage - 1;
-      this.appearPageHandler(this.currentPage - 1, this.pageCount + this.currentPage - 1);
-      // this.appearPageHandler(lastAppearPage);
-    }
+    this.appearPageHandler();
   }
 
   onLastPageClick() {
-
+    const totalPages = this.pages.length - 1;
+    this.currentPage = this.pages[totalPages];
+    this.appearPageHandler();
   }
 
   private initPages() {
@@ -68,27 +55,27 @@ export class PaginationComponent implements OnInit {
     }
   }
 
-  // private appearPageHandler(boundary?: number) {
-  private appearPageHandler(start: number, end: number) {
+  private appearPageHandler() {
     const appearPageLength = this.appearPages.length - 1;
-    // let start: number = 0;
-    // let end: number = this.pageCount;
-    // if (this.currentPage < boundary) {
-    //   start = this.currentPage - this.pageCount <= 0 ? 0 : this.currentPage - this.pageCount;
-    //   end = start + this.pageCount;
-    //   // this.appearPageHandler(pre, pre + this.pageCount);
-    //   this.appearPages = Array.from(this.pages).slice(start, end);
-    //   return;
-    // }
-    // if (this.currentPage > boundary) {
-    //   const next = this.pageCount + this.currentPage - 1 >= appearPageLength ? appearPageLength : this.pageCount + this.currentPage - 1;
-    //   start = this.currentPage - 1;
-    //   end = this.pageCount + this.currentPage - 1;
-    //   // this.appearPageHandler(this.currentPage - 1, this.pageCount + this.currentPage - 1);
-    //   this.appearPages = Array.from(this.pages).slice(start, end);
-    //   return;
-    // }
-    // this.appearPages = Array.from(this.pages).slice(start, end);
-    this.appearPages = Array.from(this.pages).slice(start, end);
+    const lastAppearPage = this.appearPages[appearPageLength];
+    const firstAppearPage = this.appearPages[1];
+
+    if (this.currentPage >= this.pages[this.pages.length - 1]) {
+      this.appearPages = Array.from(this.pages).slice(this.pages.length - this.pageCount + 1, this.pages.length);
+      return;
+    }
+
+    if (this.currentPage > lastAppearPage - 1) {
+      const next = this.currentPage - 1;
+      const endPage = this.pageCount + this.currentPage - 1;
+      this.appearPages = Array.from(this.pages).slice(next, endPage);
+      return;
+    }
+
+    if (this.currentPage < firstAppearPage) {
+      const pre = this.currentPage - this.pageCount <= 0 ? 0 : this.currentPage - this.pageCount;
+      const startPage = pre + this.pageCount;
+      this.appearPages = Array.from(this.pages).slice(pre, startPage);
+    }
   }
 }
