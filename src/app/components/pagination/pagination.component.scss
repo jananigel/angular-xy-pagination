@@ -1,4 +1,27 @@
+$primary-gray-0: #3c3c3c;
+$primary-gray-1: #c3c3c3;
+
+:host {
+  border: 1px solid $primary-gray-0;
+  border-radius: 3px;
+}
+
 :host,
 .flex {
-  display: flex;
+  display: inline-flex;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 10px;
+  transition: background .2s;
+
+  &:hover {
+    background: $primary-gray-1;
+  }
+}
+
+.btn.page:not(:last-child),
+.btn:not(.last-page) {
+  border-right: 1px solid;
 }
